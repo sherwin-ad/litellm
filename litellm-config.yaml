@@ -9,6 +9,17 @@ model_list:
       model: anthropic/claude-3-5-sonnet-20240620
       api_key: "os.environ/ANTHROPIC_API_KEY"
 
+  - model_name: qwq-32b
+    litellm_params:
+      model: dashscope/qwq-32b
+      api_key: "os.environ/DASHSCOPE_API_KEY"
+
+  - model_name: command-a
+    litellm_params:
+      model: cohere_chat/command-a-03-2025
+      api_key: "os.environ/COHERE_API_KEY"
+  
+
 litellm_settings:
   # Enable saving metadata and analytics configurations directly to Postgres
   store_model_in_db: True 
