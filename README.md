@@ -17,29 +17,35 @@ cd /path/to/litellm
 
 ### 2. Configure Environment Variables
 
-Edit the `.env` file and add your API keys:
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file and update the values with your configuration:
 
 ```bash
 # Database Configuration
 POSTGRES_USER=litellm
-POSTGRES_PASSWORD=SecurePassword9090
+POSTGRES_PASSWORD=your-secure-password
 POSTGRES_DB=litellm_db
 
 # LiteLLM Master API Key (Must start with sk-)
-LITELLM_MASTER_KEY=sk-masterkey123456789
+LITELLM_MASTER_KEY=sk-your-secure-key
 
 # Unique encryption key (Required for storing models/keys safely)
-LITELLM_SALT_KEY=sk-salt987654321
+LITELLM_SALT_KEY=sk-your-salt-key
 
 # External AI Provider Keys (Add whatever you use)
-OPENAI_API_KEY=sk-proj-yourOpenAiKey...
-ANTHROPIC_API_KEY=sk-ant-yourAnthropicKey...
+OPENAI_API_KEY=sk-proj-your-actual-api-key
+ANTHROPIC_API_KEY=sk-ant-your-actual-api-key
 ```
 
 **Important:** 
-- Change the master key and salt key to secure random values
+- Generate secure keys instead of using the examples
 - Add your actual API keys for the services you want to use
-- Never commit real credentials to version control
+- Never commit `.env` to version control (use `.env.example` as a template)
 
 ### 3. Configure Models
 
@@ -203,20 +209,52 @@ docker compose up -d
 
 ```
 .
-├── .env                      # Environment variables (not in git)
+├── .env                      # Environment variables (local, not in git)
+├── .env.example              # Environment template (commit to git)
 ├── docker-compose.yml        # Docker Compose configuration
 ├── litellm-config.yaml       # LiteLLM proxy configuration
 ├── litellm_config.yaml/      # (empty folder - can be deleted)
 └── README.md                 # This file
 ```
 
+### Setup with `.env.example`
+
+1. Copy `.env.example` to `.env` when first setting up
+2. Edit `.env` with your credentials and API keys
+3. `.env` is ignored by git (add to `.gitignore`)
+4. `.env.example` is committed to git so others can see required variables
+
 ## Security Best Practices
 
-1. **Never commit `.env` to git** - it contains API keys
+### Git Setup
+
+Ensure `.env` is not tracked by git:
+
+```bash
+# Add .env to .gitignore
+echo ".env" >> .gitignore
+
+# If .env was already committed, remove it
+git rm --cached .env
+git commit -m "Remove .env from tracking"
+```
+
+### Environment and Keys
+
+1. **Never commit `.env` to git** - it contains sensitive API keys
 2. **Use strong passwords** - Change `POSTGRES_PASSWORD` and generate secure keys
-3. **Change default keys** - Replace `LITELLM_MASTER_KEY` and `LITELLM_SALT_KEY`
+3. **Change default keys** - Replace `LITELLM_MASTER_KEY` and `LITELLM_SALT_KEY` with unique values
 4. **Restrict network access** - Don't expose ports 4000 and 5432 to the internet without proper authentication
 5. **Use secrets management** - Consider using Docker Secrets or external secret managers in production
+
+Generate secure keys with:
+```bash
+# Linux/Mac
+openssl rand -hex 16
+
+# Windows PowerShell
+[System.Convert]::ToBase64String((1..32 | ForEach-Object { Get-Random -Maximum 256 } | ForEach-Object { [byte]$_ })) -replace '=+$'
+```
 
 ## Additional Resources
 
