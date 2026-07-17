@@ -27,6 +27,8 @@ services:
       LITELLM_SALT_KEY: ${LITELLM_SALT_KEY}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY}
+      COHERE_API_KEY: ${COHERE_API_KEY}
     volumes:
       - ./litellm-config.yaml:/app/config.yaml
     command: [ "--config", "/app/config.yaml" ]
